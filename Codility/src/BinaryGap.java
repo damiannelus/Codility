@@ -1,8 +1,6 @@
 
 public class BinaryGap {
 	
-//	TODO:dodaæ obs³ugê GIT'a
-//	TODO:przekazywaæ obiekt miêdzy metodami
 //	TODO:zrobiæ testy.
 
 	
@@ -13,32 +11,31 @@ public class BinaryGap {
 		//file open
 		///exception handling
 		//start time
-		System.out.println(calculateBinaryGap(82));
+		for (int i = -10; i < 9; i++) {
+			System.out.println("Dla i = " + i + " BinaryGap = " + calculateBinaryGap(i));
+		}
+		
 		//end time
 		//print results
 	}
 
 	private static int calculateBinaryGap(int i) {
-		String binaryRepresenation;
+		if(i < 1) return 0;
 		int maxGapLength = 0, startIndex, endIndex;
-		binaryRepresenation = Integer.toBinaryString(i);
-		maxGapLength = findNextGap(0,0,maxGapLength,binaryRepresenation);
+		maxGapLength = findMaxGap(0,0,Integer.toBinaryString(i));
 		return maxGapLength;	
 	}
 
-	private static int findNextGap(int startIndex, int endIndex, int maxGapLength, String binaryRepresenation) {
-		System.out.println(binaryRepresenation);
+	private static int findMaxGap(int startIndex, int endIndex, String binaryRepresenation) {
+		int maxGapLength = 0;
 		int localGapLength;
-		while (binaryRepresenation.indexOf("10", startIndex) != -1 && binaryRepresenation.indexOf("01", endIndex) != -1) {
-			startIndex = binaryRepresenation.indexOf("10", startIndex);
-//			System.out.println("startIndex " + startIndex);
-			endIndex = binaryRepresenation.indexOf("01", endIndex);
-//			System.out.println("endIndex " + endIndex);
-			localGapLength = findNextGap(startIndex+1, endIndex+1, maxGapLength, binaryRepresenation);
+		while (binaryRepresenation.indexOf("10") != -1 && binaryRepresenation.indexOf("01") != -1) {
+			startIndex = binaryRepresenation.indexOf("10");
+			endIndex = binaryRepresenation.indexOf("01");
+			localGapLength = endIndex - startIndex;
 			if (localGapLength > maxGapLength) maxGapLength = localGapLength;
-			System.out.println(maxGapLength);
-			return maxGapLength;
+			binaryRepresenation = binaryRepresenation.substring(endIndex+1);
 		}
-		return 0;	
+		return maxGapLength;	
 	}
 }
