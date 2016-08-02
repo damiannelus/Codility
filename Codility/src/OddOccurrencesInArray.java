@@ -19,7 +19,6 @@ public class OddOccurrencesInArray {
 
 	private static boolean validateInputArray(int[] a) {
 		if (a.length%2==0) return false;
-		return true;
-		
+		return true;	
 	}
 }
