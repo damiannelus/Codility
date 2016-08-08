@@ -2,9 +2,6 @@
 public class PassingCars {
 	public static void main(String[] args) {
 		int[] A = {0,1,0,1,1}; //5
-//		int[] A = {0,0,0,0,1}; //1
-//		int[] A = {0,0,0,0,1}; //0
-//		int[] A = {0,0,0,0,1}; //1
 		
 		System.out.println(countPasses(A));
 	}
@@ -13,8 +10,13 @@ public class PassingCars {
 		int onesCounter = 0;
 		int completeCounter = 0;
 		for (int i = A.length-1; i >= 0; i--) {
-			
+			if(A[i]==1){
+				onesCounter++;
+			}else {
+				completeCounter+=onesCounter;
+			}
+			if(completeCounter > 1000000000) return -1;
 		}
-		return -1;
+		return completeCounter;
 	}
 }
