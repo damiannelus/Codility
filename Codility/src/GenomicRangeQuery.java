@@ -10,50 +10,68 @@ public class GenomicRangeQuery {
 		result = minimalImpactFactor(S, P, Q);
 		verbose(result);
 	}
+	
+	static class Point{
+		public Point(int x, int val) {
+			super();
+			this.x = x;
+			this.val = val;
+		}
+		int x;
+		int val;
+		
+		public int getVal(){
+			return this.val;
+		}
+		public int getX(){
+			return this.x;
+		}
+	}
+	
 
 	private static int[] minimalImpactFactor(String S, int[] P, int[] Q) {
 		int strL = S.length();
 		int resL = P.length;
 		int[] result = new int[resL];
-		List<List<Integer>> positionMappings = new ArrayList<List<Integer>>();
-		positionMappings.add(new ArrayList<Integer>());
-		positionMappings.add(new ArrayList<Integer>());
-		positionMappings.add(new ArrayList<Integer>());
+		List<List<Point>> pointsMap = new ArrayList<List<Point>>();
+		int[] auxVals = new int[strL];
+		int tmpVal = 0;
 		for (int i = 0; i < strL; i++) {
-			switch (S.charAt(i)) {
-			case 'A':
-				positionMappings.get(0).add(i);
-				break;
-			case 'C':
-				positionMappings.get(1).add(i);
-				break;
-			case 'G':
-				positionMappings.get(2).add(i);
-				break;
-			default:				
-				break;
-			}
-		}
-		for (int i = 0; i < resL; i++) {
-			result[i] = getMinimalForPair(P[i],Q[i], positionMappings);
-		}
-		
-		return result;
-	}
-
-	private static int getMinimalForPair(int i, int j, List<List<Integer>> positionMappings) {
-		List<Integer> tmpMaps = new ArrayList<Integer>();
-		int tmpPosition = 0;
-		for (int k = 0; k < positionMappings.size(); k++) {
-			tmpMaps = positionMappings.get(k);
-			for (int k2 = 0; k2 < tmpMaps.size(); k2++) {
-				tmpPosition = tmpMaps.get(k2);
-				if (i <= tmpPosition && j >= tmpPosition) {
-					return k+1;
+			tmpVal = getVal(S.charAt(i));
+			pointsMap.add(new ArrayList<Point>());
+			pointsMap.get(i).add(new Point(i,tmpVal));
+			auxVals[i] = tmpVal;
+			for (int j = 0; j <= i; j++) {
+				if(auxVals[i-j] > tmpVal) {
+					pointsMap.get(i-j).add(new Point(i,tmpVal));
+					auxVals[i-j] = tmpVal;
 				}
 			}
 		}
-		return 4;
+		for (int i = 0; i < resL; i++) {
+			result[i]= getMinimal(pointsMap.get(P[i]), Q[i]);
+		}
+		return result;
+	}
+	
+	private static int getVal(char charAt) {
+		switch (charAt) {
+		case 'A':
+			return 1;
+		case 'C':
+			return 2;
+		case 'G':
+			return 3;
+		default:
+			return 4;
+		}
+	}
+
+	private static int getMinimal(List<Point> list, int i) {
+		for (int j = list.size()-1; j >= 0; j--) {
+			if(i >= list.get(j).getX()) return list.get(j).getVal();
+		}
+		return 5;
 	}
 
 	private static void verbose(int[] result) {
